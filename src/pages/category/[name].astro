@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AppCard from '../../components/AppCard.astro';
+import { apps } from '../../lib/apps';
+import { allCategories, categoryColorMap } from '../../lib/categories';
+import type { AppCategory, CategoryColor } from '../../lib/categories';
+
+export function getStaticPaths() {
+  return allCategories.map((name) => ({
+    params: { name },
+  }));
+}
+
+const { name } = Astro.params;
+const category = name as AppCategory;
+const color = categoryColorMap[category];
+const categoryApps = apps.filter((app) => app.category === category);
+const count = categoryApps.length;
+
+const categoryEmoji: Record<AppCategory, string> = {
+  '학습': '📚',
+  '게임': '🎮',
+  '유틸리티': '🛠️',
+};
+
+const colorClasses: Record<CategoryColor, string> = {
+  green: 'text-notion-tag-green-text',
+  orange: 'text-notion-tag-orange-text',
+  purple: 'text-notion-tag-purple-text',
+};
+
+const bgClasses: Record<CategoryColor, string> = {
+  green: 'bg-notion-tag-green',
+  orange: 'bg-notion-tag-orange',
+  purple: 'bg-notion-tag-purple',
+};
+---
+<BaseLayout title={`${category} - 우아한테크코스 앱 모음`} description={`${category} 카테고리의 앱 ${count}개를 확인하세요.`}>
+  <div class="max-w-4xl mx-auto px-6 py-16">
+    <a
+      href="/"
+      class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+    >
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      전체 앱 목록
+    </a>
+
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-2">
+        <span class={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-semibold ${bgClasses[color]} ${colorClasses[color]}`}>
+          {categoryEmoji[category]} {category}
+        </span>
+      </div>
+      <p class="text-sm text-muted-foreground">
+        <strong class="text-foreground">{count}</strong>개의 앱
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {categoryApps.map((app) => (
+        <AppCard
+          id={app.id}
+          name={app.name}
+          emoji={app.emoji}
+          category={app.category}
+          reason={app.reason}
+          authors={app.authors}
+          prNumber={app.prNumber}
+          url={app.url}
+        />
+      ))}
+    </div>
+
+    {count === 0 && (
+      <div class="text-center py-16">
+        <p class="text-muted-foreground text-sm">이 카테고리에 등록된 앱이 없습니다.</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>

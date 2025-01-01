@@ -1,0 +1,66 @@
+---
+import CategoryTag from './CategoryTag.astro';
+import type { AppCategory } from '@/lib/categories';
+
+interface Props {
+  id: string;
+  name: string;
+  emoji: string;
+  category: AppCategory;
+  reason: string | null;
+  authors: { name: string; githubId: string }[];
+  prNumber: number;
+  url?: string;
+}
+
+const { id, name, emoji, category, reason, authors, prNumber, url } = Astro.props;
+const authorLabel = authors.map(a => a.name).join(' · ');
+
+// Build favicon URL from app's deployed URL
+let faviconUrl: string | null = null;
+if (url) {
+  try {
+    const hostname = new URL(url).hostname;
+    faviconUrl = `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
+  } catch {
+    // invalid URL — skip favicon
+  }
+}
+---
+<a
+  href={`/app/${id}/`}
+  data-category={category}
+  data-name={name.toLowerCase()}
+  data-author={authorLabel.toLowerCase()}
+  data-reason={(reason || '').toLowerCase()}
+  data-pr={String(prNumber)}
+  class="app-card group block rounded-lg border border-border p-4 transition-colors hover:bg-notion-hover"
+>
+  <div class="flex items-start gap-3">
+    <span class="text-2xl leading-none mt-0.5 shrink-0">{emoji}</span>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-1.5 mb-1">
+        <h3 class="font-semibold text-sm text-foreground truncate">{name}</h3>
+        {faviconUrl && (
+          <img
+            src={faviconUrl}
+            alt=""
+            width="16"
+            height="16"
+            loading="lazy"
+            decoding="async"
+            class="shrink-0 rounded-sm opacity-50 group-hover:opacity-80 transition-opacity"
+            onerror="this.style.display='none'"
+          />
+        )}
+      </div>
+      {reason && (
+        <p class="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">{reason}</p>
+      )}
+      <div class="flex items-center justify-between">
+        <CategoryTag category={category} />
+        <span class="text-xs text-muted-foreground truncate ml-2">{authorLabel}</span>
+      </div>
+    </div>
+  </div>
+</a>

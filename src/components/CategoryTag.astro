@@ -1,0 +1,23 @@
+---
+import type { AppCategory } from '@/lib/categories';
+import { categoryColorMap } from '@/lib/categories';
+
+interface Props {
+  category: AppCategory;
+}
+
+const { category } = Astro.props;
+const color = categoryColorMap[category];
+
+const colorClasses: Record<string, string> = {
+  blue: 'bg-notion-tag-blue text-notion-tag-blue-text',
+  green: 'bg-notion-tag-green text-notion-tag-green-text',
+  orange: 'bg-notion-tag-orange text-notion-tag-orange-text',
+  pink: 'bg-notion-tag-pink text-notion-tag-pink-text',
+  purple: 'bg-notion-tag-purple text-notion-tag-purple-text',
+  yellow: 'bg-notion-tag-yellow text-notion-tag-yellow-text',
+};
+---
+<span class={`inline-flex items-center px-2.5 py-1 rounded text-xs font-medium ${colorClasses[color]}`}>
+  {category}
+</span>

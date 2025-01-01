@@ -1,0 +1,60 @@
+name: 앱 등록
+description: 내가 만든 앱을 등록합니다
+title: "[앱 등록] "
+labels: ["앱 등록"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: 앱 이름
+      placeholder: "예: 우아한 할리갈리"
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 카테고리
+      options:
+        - 학습
+        - 게임
+        - 유틸리티
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: 앱 URL
+      placeholder: "https://gemini.google.com/share/..."
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: 크루 이름
+      placeholder: "예: 글렌"
+    validations:
+      required: true
+  - type: input
+    id: github_id
+    attributes:
+      label: GitHub ID
+      placeholder: "예: nn98"
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: 한 줄 소개
+      placeholder: "이 앱을 왜 만들었는지 간단히 적어주세요"
+    validations:
+      required: false
+  - type: textarea
+    id: features
+    attributes:
+      label: 주요 기능
+      description: 줄바꿈으로 구분해주세요
+      placeholder: |
+        실시간 점수 계산
+        2인 대전 모드
+    validations:
+      required: false
